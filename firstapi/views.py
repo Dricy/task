@@ -24,30 +24,33 @@ def get_geolocation(ip):
 def visit(request):
     visitor_name = request.GET.get('visitor_name', '')
     client_ip = get_client_ip(request)
+    #client_ip = '102.89.33.147'
     
     # Fetch location and weather using a free API (like OpenWeatherMap)
     weather_api_key = 'b8f58ffa031a3ba694ea099e9ea25576'
     latitude, longitude = get_geolocation(client_ip)
-    print(longitude, latitude)
-    weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={weather_api_key}&units=metric'
-    response = requests.get(weather_url)
-    weather_data = response.json()
-    print(weather_data)
-    if weather_data['cod'] == '400':
-        return JsonResponse({'error': weather_data['message']})
+    if latitude is not None and longitude is not None:
         
-    temperature = weather_data['main']['temp']
-    city = weather_data['name']
-    
-    greeting = f"Hello, {visitor_name}!, the temperature is {temperature} degrees Celsius in {city}"
-    
-    # Respond with JSON
-    data = {
-        'client_ip': client_ip,
-        'location': city,
-        'greeting': greeting
-    }
-    return JsonResponse(data)
-
+        print(longitude, latitude)
+        weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={weather_api_key}&units=metric'
+        response = requests.get(weather_url)
+        weather_data = response.json()
+        print(weather_data)
+        if weather_data['cod'] == '400':
+            return JsonResponse({'error': weather_data['message']})
+            
+        temperature = weather_data['main']['temp']
+        city = weather_data['name']
+        
+        greeting = f"Hello, {visitor_name}!, the temperature is {temperature} degrees Celsius in {city}"
+        
+        # Respond with JSON
+        data = {
+            'client_ip': client_ip,
+            'location': city,
+            'greeting': greeting
+        }
+        return JsonResponse(data)
+    return JsonResponse({'error': 'Unable to retrieve geolocation data.'}, status=400)
 
 
