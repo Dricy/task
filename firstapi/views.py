@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 import requests
 
-def hello(request):
+def visit(request):
     visitor_name = request.GET.get('visitor_name', '')
     client_ip = request.META.get('REMOTE_ADDR', '')
     

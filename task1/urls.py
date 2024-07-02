@@ -20,5 +20,5 @@ from firstapi import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/hello/', views.hello, name='hello'),
+    path('api/visit/', views.visit, name='visit'),
 ]
