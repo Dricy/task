@@ -10,7 +10,7 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-def get_geolocation(ip):
+'''def get_geolocation(ip):
     api_key = '7591ec4f-66ec-43b6-966b-0ff9fb935edd'# Replace with your IPXplorer API key
     url = f'https://ipxplorer.com/api/ip?ip={ip}&key={api_key}'
     response = requests.get(url)
@@ -19,6 +19,15 @@ def get_geolocation(ip):
     location = geolocation_data.get('location', {})
     latitude = location.get('latitude')
     longitude = location.get('longitude')
+    return latitude, longitude'''
+    
+def get_geolocation(ip):
+    url = f'http://ip-api.com/json/{ip}'
+    response = requests.get(url)
+    geolocation_data = response.json()
+    print(geolocation_data)
+    latitude = geolocation_data.get('lat')
+    longitude = geolocation_data.get('lon')
     return latitude, longitude
 
 def visit(request):
