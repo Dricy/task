@@ -49,8 +49,8 @@ def hello(request):
     client_ip = request.META.get('REMOTE_ADDR', '')
     
     # Fetch location and weather using a free API (like OpenWeatherMap)
-    weather_api_key = 'your_weather_api_key_here'
-    weather_url = f'http://api.openweathermap.org/data/2.5/weather?q=New York&appid={weather_api_key}&units=metric'
+    weather_api_key = 'b8f58ffa031a3ba694ea099e9ea25576'
+    weather_url = f'http://api.openweathermap.org/data/2.5/weather?q=Lagos,nigeria&appid={weather_api_key}&units=metric'
     response = requests.get(weather_url)
     weather_data = response.json()
     temperature = weather_data['main']['temp']
