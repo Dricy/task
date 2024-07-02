@@ -10,15 +10,32 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def get_geolocation(ip):
+    api_key = '7591ec4f-66ec-43b6-966b-0ff9fb935edd'# Replace with your IPXplorer API key
+    url = f'https://ipxplorer.com/api/ip?ip={ip}&key={api_key}'
+    response = requests.get(url)
+    geolocation_data = response.json()
+    print(geolocation_data)
+    location = geolocation_data.get('location', {})
+    latitude = location.get('latitude')
+    longitude = location.get('longitude')
+    return latitude, longitude
+
 def visit(request):
     visitor_name = request.GET.get('visitor_name', '')
     client_ip = get_client_ip(request)
     
     # Fetch location and weather using a free API (like OpenWeatherMap)
     weather_api_key = 'b8f58ffa031a3ba694ea099e9ea25576'
-    weather_url = f'http://api.openweathermap.org/data/2.5/weather?q=Lagos,nigeria&appid={weather_api_key}&units=metric'
+    latitude, longitude = get_geolocation(client_ip)
+    print(longitude, latitude)
+    weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={weather_api_key}&units=metric'
     response = requests.get(weather_url)
     weather_data = response.json()
+    print(weather_data)
+    if weather_data['cod'] == '400':
+        return JsonResponse({'error': weather_data['message']})
+        
     temperature = weather_data['main']['temp']
     city = weather_data['name']
     
